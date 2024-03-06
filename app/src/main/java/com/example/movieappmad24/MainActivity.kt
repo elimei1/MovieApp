@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -27,6 +28,7 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material3.Card
 import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -43,6 +45,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -170,6 +173,17 @@ class MainActivity : ComponentActivity() {
                             }
                             .padding(8.dp)
                     )
+                }
+                AnimatedVisibility(visible = open) {
+                    Column(modifier = Modifier.padding(all = 12.dp)) {
+                        Text(text="Director: "+ movie.director)
+                        Text(text="Released: " + movie.year)
+                        Text(text="Genre: " + movie.genre)
+                        Text(text="Actors: " + movie.actors)
+                        Text(text="Rating: "+ movie.rating)
+                        Divider(color = Color.DarkGray, thickness = 1.dp)
+                        Text(text="Plot: " + movie.plot)
+                    }
                 }
             }
         }
