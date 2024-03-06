@@ -48,9 +48,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.layout.ContentScale.Companion.FillWidth
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
 import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
@@ -132,12 +134,12 @@ class MainActivity : ComponentActivity() {
             ){
             Column {
                 Box {
-                    Image(
-                        painter = painterResource(id = R.drawable.movie_image),
-                        contentDescription = "placeholder",
-                        contentScale = ContentScale.FillWidth,
+                    AsyncImage(
+                        model = movie.images[0],
+                        contentDescription = "images",
+                        contentScale = FillWidth,
                         modifier = Modifier
-                            .aspectRatio(ratio= 18.5f/9f)
+                            .aspectRatio(18.5f / 9f)
                     )
                     Icon(
                         imageVector = Icons.Default.FavoriteBorder,
@@ -176,13 +178,13 @@ class MainActivity : ComponentActivity() {
                 }
                 AnimatedVisibility(visible = open) {
                     Column(modifier = Modifier.padding(all = 12.dp)) {
-                        Text(text="Director: "+ movie.director)
-                        Text(text="Released: " + movie.year)
-                        Text(text="Genre: " + movie.genre)
-                        Text(text="Actors: " + movie.actors)
-                        Text(text="Rating: "+ movie.rating)
+                        Text(text="Director: ${movie.director}")
+                        Text(text="Released: ${movie.year}")
+                        Text(text="Genre: ${movie.genre}")
+                        Text(text="Actors: ${movie.actors}")
+                        Text(text="Rating: ${movie.rating}")
                         Divider(color = Color.DarkGray, thickness = 1.dp)
-                        Text(text="Plot: " + movie.plot)
+                        Text(text="Plot: ${movie.plot}")
                     }
                 }
             }
