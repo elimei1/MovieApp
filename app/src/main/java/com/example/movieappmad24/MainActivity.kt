@@ -1,11 +1,9 @@
 package com.example.movieappmad24
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -47,9 +45,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.ContentScale.Companion.FillWidth
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
@@ -59,68 +55,60 @@ import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
 
 class MainActivity : ComponentActivity() {
 
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-    @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             MovieAppMAD24Theme {
-                val bottomItems = listOf(
-                    BottomItem(
-                        title = "Home",
-                        selectedIcon = Icons.Filled.Home,
-                        unselectedIcon = Icons.Outlined.Home
-                    ),
-                    BottomItem(
-                        title = "WatchList",
-                        selectedIcon = Icons.Filled.Star,
-                        unselectedIcon = Icons.Outlined.Star
-                    )
-                )
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    var selectedItemIndex by rememberSaveable {
-                        mutableStateOf(0)
-                    }
-                    Scaffold(
-                        topBar = {
-                            CenterAlignedTopAppBar(
-                                title = {Text(text="Elias' Movie App")
-                                },
-                            )
-                        },
-                        bottomBar = {
-                            NavigationBar {
-                                bottomItems.forEachIndexed{index, item ->
-                                    NavigationBarItem(
-                                        selected = selectedItemIndex == index,
-                                        onClick = { selectedItemIndex = index },
-                                        label = {
-                                            Text(text = item.title)
-                                        },
-                                        icon = {
-                                            Icon(
-                                                imageVector = if(index == selectedItemIndex){
-                                                    item.selectedIcon
-                                                }else {
-                                                    item.unselectedIcon
-                                                },
-                                                contentDescription = item.title
-                                            )
-                                        })
-                                }
-                            }
-                        },
-                        content = {
-                            MovieList(movies = getMovies(), padding = it)
-                        },
-                    )
+                    MainScreen()
                 }
             }
         }
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun MainScreen() {
+        var selectedItemIndex by rememberSaveable {
+            mutableStateOf(0)
+        }
+        val bottomItems = listOf(
+            BottomItem("Home", Icons.Filled.Home, Icons.Outlined.Home),
+            BottomItem("WatchList", Icons.Filled.Star, Icons.Outlined.Star)
+        )
+        Scaffold(
+            topBar = {
+                CenterAlignedTopAppBar(title = {Text(text="Elias' Movie App")},)
+            },
+            bottomBar = {
+                NavigationBar {
+                    bottomItems.forEachIndexed{index, item ->
+                        NavigationBarItem(
+                            selected = selectedItemIndex == index,
+                            onClick = { selectedItemIndex = index },
+                            label = {
+                                Text(text = item.title)
+                            },
+                            icon = {
+                                Icon(
+                                    imageVector = if(index == selectedItemIndex){
+                                        item.selectedIcon
+                                    }else {
+                                        item.unselectedIcon
+                                    },
+                                    contentDescription = item.title
+                                )
+                            }
+                        )
+                    }
+                }
+            },
+            content = {MovieList(movies = getMovies(), padding = it) },
+        )
     }
 
     @Composable
@@ -149,7 +137,6 @@ class MainActivity : ComponentActivity() {
                             .padding(5.dp),
                         tint = MaterialTheme.colorScheme.secondary
                     )
-
                 }
                 var open by remember {
                     mutableStateOf(false)
