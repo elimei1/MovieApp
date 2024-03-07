@@ -56,6 +56,7 @@ import com.example.movieappmad24.ui.theme.MovieAppMAD24Theme
 
 class MainActivity : ComponentActivity() {
 
+    // method called when app is created
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -71,62 +72,77 @@ class MainActivity : ComponentActivity() {
         }
     }
 
-    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun MainScreen() {
-        var selectedItemIndex by rememberSaveable {
-            mutableStateOf(0)
+        // state for currently selected item
+        var selectedItemId by rememberSaveable {
+            mutableStateOf("Home")
         }
+        // list of items in the bottom bar
         val bottomItems = listOf(
-            BottomItem("Home", Icons.Filled.Home, Icons.Outlined.Home),
-            BottomItem("WatchList", Icons.Filled.Star, Icons.Outlined.Star)
+            BottomItem("Home", "Home", Icons.Filled.Home, Icons.Outlined.Home),
+            BottomItem("WatchList", "WatchList", Icons.Filled.Star, Icons.Outlined.Star)
         )
+
+        // scaffold including topbar, bottombar and content
         Scaffold(
-            topBar = {
-                CenterAlignedTopAppBar(title = { Text(text = "Elias' Movie App") })
-            },
+            topBar = { TopBar() },
             bottomBar = {
-                NavigationBar {
-                    bottomItems.forEachIndexed { index, item ->
-                        NavigationBarItem(
-                            selected = selectedItemIndex == index,
-                            onClick = { selectedItemIndex = index },
-                            label = {
-                                Text(text = item.title)
-                            },
-                            icon = {
-                                Icon(
-                                    imageVector = if (index == selectedItemIndex) {
-                                        item.selectedIcon
-                                    } else {
-                                        item.unselectedIcon
-                                    },
-                                    contentDescription = item.title
-                                )
-                            }
-                        )
-                    }
+                BottomBar(bottomItems, selectedItemId) { itemId ->
+                    selectedItemId = itemId // update itemId if selected
                 }
             },
-            content = { MovieList(movies = getMovies(), padding = it) },
+            content = { padding -> MovieList(movies = getMovies(), padding) },
+        )
+    }
+
+    @OptIn(ExperimentalMaterial3Api::class)
+    @Composable
+    fun TopBar() {
+        CenterAlignedTopAppBar(
+            title = { Text(text = "Elias' Movie App") }     // title of app
         )
     }
 
     @Composable
+    fun BottomBar(bottomItems: List<BottomItem>, selectedItemId: String, onItemSelected: (String) -> Unit) {
+        NavigationBar {
+            // loop through bottom items to create navigation items
+            bottomItems.forEach { item ->
+                NavigationBarItem(
+                    selected = selectedItemId == item.id,   // is item selected?
+                    onClick = { onItemSelected(item.id) },  // select when clicked
+                    label = { Text(text = item.title) },
+                    icon = {
+                        Icon(
+                            imageVector =
+                            if (selectedItemId == item.id) item.selectedIcon
+                            else item.unselectedIcon,
+                            contentDescription = item.title
+                        )
+                    }
+                )
+            }
+        }
+    }
+
+    @Composable
     fun MovieRow(movie: Movie) {
+        // whole thing
         Card(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(5.dp),
             shape = RoundedCornerShape(size = 20.dp),
-
             ) {
             Column {
+                // state of heart
                 var favorite by remember {
                     mutableStateOf(false)
                 }
                 Box {
                     AsyncImage(
+                        // first image because of list of images
                         model = movie.images[0],
                         contentDescription = "images",
                         contentScale = FillWidth,
@@ -142,11 +158,13 @@ class MainActivity : ComponentActivity() {
                             .clickable {
                                 favorite = !favorite
                             },
+                        // red if clicked
                         tint =
                         if (favorite) Red
                         else colorScheme.secondary
                     )
                 }
+                // state to check if card expanded
                 var open by remember {
                     mutableStateOf(false)
                 }
@@ -160,6 +178,7 @@ class MainActivity : ComponentActivity() {
                             .weight(weight = 7f),
                         fontSize = 18.sp
                     )
+                    // icon for expanding
                     Icon(
                         imageVector =
                         if (open) Icons.Default.KeyboardArrowDown
@@ -174,12 +193,17 @@ class MainActivity : ComponentActivity() {
                 }
                 AnimatedVisibility(visible = open) {
                     Column(modifier = Modifier.padding(all = 12.dp)) {
-                        Text(text = "Director: ${movie.director}")
-                        Text(text = "Released: ${movie.year}")
-                        Text(text = "Genre: ${movie.genre}")
-                        Text(text = "Actors: ${movie.actors}")
-                        Text(text = "Rating: ${movie.rating}")
-                        Divider(color = Color.DarkGray, thickness = 1.dp)
+                        // multiline string
+                        val movieDetails = """
+                            |Director: ${movie.director}
+                            |Released: ${movie.year}
+                            |Genre: ${movie.genre}
+                            |Actors: ${movie.actors}
+                            |Rating: ${movie.rating}
+                        """.trimMargin()    // remove whitespaces on left side
+
+                        Text(text = movieDetails)
+                        Divider(color = Color.Black, thickness = 2.dp)
                         Text(text = "Plot: ${movie.plot}")
                     }
                 }
@@ -203,7 +227,9 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+// represent bottom items in own class
 data class BottomItem(
+    val id: String,
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector
