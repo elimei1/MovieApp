@@ -107,7 +107,7 @@ fun BottomBar(
 }
 
 @Composable
-fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}, modifier: Modifier) {
+fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
     // whole thing
     Card(
         modifier = Modifier
@@ -205,7 +205,7 @@ fun MovieList(
             .padding(paddingValues = padding)
     ) {
         items(items = movies) { movie ->
-            MovieRow(movie = movie, onItemClick = {navController.navigate(route = "detailscreen/${movie.id}")}, modifier = Modifier)
+            MovieRow(movie = movie, onItemClick = {navController.navigate(route = "detailscreen/${movie.id}")})
         }
     }}
 
