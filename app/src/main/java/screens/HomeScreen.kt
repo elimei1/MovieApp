@@ -47,6 +47,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
+import navigation.Screen
 
 @Composable
 fun HomeScreen(navController: NavController) {
@@ -205,16 +206,6 @@ fun MovieList(
             .padding(paddingValues = padding)
     ) {
         items(items = movies) { movie ->
-            MovieRow(movie = movie, onItemClick = {navController.navigate(route = "detailscreen/${movie.id}")})
+            MovieRow(movie = movie, onItemClick = {navController.navigate(Screen.Detail.passMovieId(movie.id))})
         }
     }}
-
-
-
-// represent bottom items in own class
-data class BottomItem(
-    val id: String,
-    val title: String,
-    val selectedIcon: ImageVector,
-    val unselectedIcon: ImageVector
-)
