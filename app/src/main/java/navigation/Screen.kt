@@ -9,4 +9,5 @@ sealed class Screen(val route: String) {
             return this.route.replace(oldValue = "{$MOVIE_ID}", newValue = movieId)
         }
     }
+    object Watchlist: Screen(route = "watchlistscreen")
 }

@@ -45,6 +45,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
@@ -53,23 +54,25 @@ import navigation.Screen
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    // state for currently selected item
+        // state for currently selected item
     var selectedItemId by rememberSaveable {
         mutableStateOf("Home")
     }
+
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    selectedItemId = navBackStackEntry?.destination?.route ?: "Home"
+
     // list of items in the bottom bar
     val bottomItems = listOf(
-        BottomItem("Home", "Home", Icons.Filled.Home, Icons.Outlined.Home),
-        BottomItem("WatchList", "WatchList", Icons.Filled.Star, Icons.Outlined.Star)
+        BottomItem("Home", "Home", Icons.Filled.Home, Icons.Outlined.Home, Screen.Home.route),
+        BottomItem("WatchList", "WatchList", Icons.Filled.Star, Icons.Outlined.Star, Screen.Watchlist.route)
     )
 
     // scaffold including topbar, bottombar and content
     Scaffold(
         topBar = { TopBar() },
         bottomBar = {
-            BottomBar(bottomItems, selectedItemId) { itemId ->
-                selectedItemId = itemId // update itemId if selected
-            }
+            BottomBar(bottomItems, selectedItemId, navController)
         },
         content = { padding -> MovieList(movies = getMovies(), padding, navController) },
     )
@@ -86,21 +89,29 @@ fun TopBar() {
 @Composable
 fun BottomBar(
     bottomItems: List<BottomItem>,
-    selectedItemId: String,
-    onItemSelected: (String) -> Unit
+    currentRoute: String,
+    navController: NavController
 ) {
     NavigationBar {
         // loop through bottom items to create navigation items
         bottomItems.forEach { item ->
             NavigationBarItem(
-                selected = selectedItemId == item.id,   // is item selected?
-                onClick = { onItemSelected(item.id) },  // select when clicked
+                selected = item.route == currentRoute,
+                onClick = { navController.navigate(route = item.route) {
+                    launchSingleTop = true
+                    popUpTo(navController.graph.startDestinationId) {
+                        saveState = true
+                    }
+                    restoreState = true
+                } },
                 label = { Text(text = item.title) },
                 icon = {
                     Icon(
                         imageVector =
-                        if (selectedItemId == item.id) item.selectedIcon
-                        else item.unselectedIcon,
+                        when (item.route) {
+                            currentRoute -> item.selectedIcon
+                            else -> item.unselectedIcon
+                        },
                         contentDescription = item.title
                     )
                 }

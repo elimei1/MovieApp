@@ -8,6 +8,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import screens.DetailScreen
 import screens.HomeScreen
+import screens.WatchlistScreen
 
 @Composable
 fun Navigation() {
@@ -24,6 +25,9 @@ fun Navigation() {
         ) { backStackEntry ->
             backStackEntry.arguments?.getString("movieId")?.let {
                 DetailScreen(movieId = it, navController = navController) }
+        }
+        composable(route = Screen.Watchlist.route) {
+            WatchlistScreen(navController = navController)
         }
 
     }
