@@ -36,6 +36,8 @@ fun DetailScreen(movieId: String, navController: NavController) {
                 title = {
                     if (movie != null) {
                         Text(text = movie.title)
+                    } else {
+                        Text(text = movieId)
                     }
                 },
                 navigationIcon = {

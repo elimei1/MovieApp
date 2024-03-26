@@ -1,5 +1,6 @@
 package screens
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -47,6 +48,7 @@ import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
+import navigation.MOVIE_ID
 import navigation.Screen
 
 @Composable
@@ -197,7 +199,7 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
 
 @Composable
 fun MovieList(
-    movies: List<Movie> = getMovies(),
+    movies: List<Movie>,
     padding: PaddingValues,
     navController: NavController
 ) {
@@ -206,6 +208,9 @@ fun MovieList(
             .padding(paddingValues = padding)
     ) {
         items(items = movies) { movie ->
-            MovieRow(movie = movie, onItemClick = {navController.navigate(Screen.Detail.passMovieId(movie.id))})
+            MovieRow(movie = movie) { movieId ->
+                navController.navigate(route = Screen.Detail.passMovieId(movieId = movieId))
+            }
         }
-    }}
+    }
+}
