@@ -1,6 +1,5 @@
 package screens
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -169,7 +168,7 @@ fun MovieList(
     ) {
         items(items = movies) { movie ->
             MovieRow(movie = movie) { movieId ->
-                navController.navigate(route = Screen.Detail.passMovieId(movieId))
+                navController.navigate(Screen.Detail.passMovieId(movieId))
             }
         }
     }

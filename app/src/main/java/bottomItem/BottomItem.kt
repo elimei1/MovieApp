@@ -1,4 +1,4 @@
-package navigation
+package bottomItem
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -17,8 +17,7 @@ data class BottomItem(
     val route: String
 )
 
-fun getBottomItems(): List<BottomItem> {
-    return listOf(
+val bottomItems = listOf(
         BottomItem(
             "Home",
             "Home",
@@ -32,5 +31,4 @@ fun getBottomItems(): List<BottomItem> {
             Icons.Outlined.Star,
             Screen.Watchlist.route
         )
-    )
-}
+)

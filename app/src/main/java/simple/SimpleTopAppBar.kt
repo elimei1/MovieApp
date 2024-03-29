@@ -41,7 +41,7 @@ fun SimpleTopAppBar(
                     }
                 }
             } else {
-                null
+
             }
         }
     )

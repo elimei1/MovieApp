@@ -1,13 +1,12 @@
 package simple
 
-import navigation.BottomItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
-import navigation.getBottomItems
+import bottomItem.bottomItems
 
 @Composable
 fun SimpleBottomAppBar(
@@ -15,7 +14,7 @@ fun SimpleBottomAppBar(
     currentRoute: String,
 ) {
     NavigationBar {
-        getBottomItems().forEach { item ->
+        bottomItems.forEach { item ->
             val isSelected = item.route == currentRoute
             NavigationBarItem(
                 selected = isSelected,
@@ -30,8 +29,8 @@ fun SimpleBottomAppBar(
                 icon = {
                     Icon(
                         imageVector =
-                        if (isSelected) item.selectedIcon
-                        else item.unselectedIcon,
+                        if (!isSelected) item.unselectedIcon
+                        else item.selectedIcon,
 
                         contentDescription = item.title
                     )

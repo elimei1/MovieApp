@@ -36,6 +36,7 @@ fun WatchlistScreen(navController: NavController) {
             )
         },
         content = { padding ->
+            // just get a slightly different list of movies
             MovieList(movies = getMovies().drop(2).dropLast(3), padding, navController) },
     )
 }
