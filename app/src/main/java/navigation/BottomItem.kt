@@ -1,4 +1,4 @@
-package item
+package navigation
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -14,12 +14,13 @@ data class BottomItem(
     val title: String,
     val selectedIcon: ImageVector,
     val unselectedIcon: ImageVector,
-    var route: String
+    val route: String
 )
 
 fun getBottomItems(): List<BottomItem> {
     return listOf(
-        BottomItem("Home",
+        BottomItem(
+            "Home",
             "Home",
             Icons.Filled.Home,
             Icons.Outlined.Home,
