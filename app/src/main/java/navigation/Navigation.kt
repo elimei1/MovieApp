@@ -20,7 +20,7 @@ fun Navigation() {
         }
         composable(
             route = Screen.Detail.route,
-            arguments = listOf(navArgument(MOVIE_ID) {
+            arguments = listOf(navArgument(name = "movieId") {
                 type = NavType.StringType})
         ) { backStackEntry ->
             backStackEntry.arguments?.getString("movieId")?.let {

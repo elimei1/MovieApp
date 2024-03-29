@@ -1,6 +1,6 @@
 package navigation
 
-const val MOVIE_ID = "movieId"
+//const val MOVIE_ID = "movieId"
 
 sealed class Screen(val route: String) {
     object Home: Screen(route = "homescreen")

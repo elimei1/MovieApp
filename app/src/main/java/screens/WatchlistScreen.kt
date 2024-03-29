@@ -26,7 +26,7 @@ fun WatchlistScreen(navController: NavController) {
         topBar = {
             SimpleTopAppBar(
                 title = "Watchlist",
-                navController = navController,
+                navController = null,
             )
         },
         bottomBar = {

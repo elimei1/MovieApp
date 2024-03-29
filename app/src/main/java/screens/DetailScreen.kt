@@ -35,11 +35,7 @@ fun DetailScreen(movieId: String?, navController: NavController) {
                 SimpleTopAppBar (
                     title = movie.title,
                     navController = navController
-                ) {
-                    IconButton(onClick = { navController.navigateUp() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
-                    }
-                }
+                )
             }
         },
         content = {padding ->
