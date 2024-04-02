@@ -42,9 +42,10 @@ import com.example.movieappmad24.models.getMovies
 import navigation.Screen
 import simple.SimpleBottomAppBar
 import simple.SimpleTopAppBar
+import view.MoviesViewModel
 
 @Composable
-fun HomeScreen(navController: NavController) {
+fun HomeScreen(navController: NavController, viewModel: MoviesViewModel) {
     // state for currently selected item
     var selectedItemId by rememberSaveable {
         mutableStateOf("Home")
@@ -55,21 +56,26 @@ fun HomeScreen(navController: NavController) {
 
     // scaffold including simple topbar, simple bottombar and content
     Scaffold(
-        topBar = { SimpleTopAppBar(
-            title = "Movie App",
-            navController = null) },
+        topBar = {
+            SimpleTopAppBar(
+                title = "Movie App",
+                navController = null
+            )
+        },
         bottomBar = {
             SimpleBottomAppBar(
                 currentRoute = selectedItemId,
-                navController = navController)
+                navController = navController
+            )
         },
         content = { padding ->
-            MovieList(movies = getMovies(), padding, navController) },
+            MovieList(movies = viewModel.movieList, padding, navController, viewModel)
+        },
     )
 }
 
 @Composable
-fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
+fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}, onFavClick: () -> Unit = {}) {
     // whole thing
     Card(
         modifier = Modifier
@@ -102,6 +108,7 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
                         .padding(8.dp)
                         .clickable {
                             favorite = !favorite
+                            onFavClick(//is favorite, addorremove)
                         },
                     // red if clicked
                     tint =
@@ -160,16 +167,23 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}) {
 fun MovieList(
     movies: List<Movie>,
     padding: PaddingValues,
-    navController: NavController
+    navController: NavController,
+    viewModel: MoviesViewModel
 ) {
     LazyColumn(
         modifier = Modifier
             .padding(paddingValues = padding)
     ) {
         items(items = movies) { movie ->
-            MovieRow(movie = movie) { movieId ->
-                navController.navigate(Screen.Detail.passMovieId(movieId))
-            }
+            MovieRow(
+                movie = movie,
+                onFavClick = {
+                    viewModel.toggleIsFavorite(movie)
+                },
+                onItemClick = { movieId ->
+                    navController.navigate(Screen.Detail.passMovieId(movieId))
+                }
+            )
         }
     }
 }

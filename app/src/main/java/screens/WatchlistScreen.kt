@@ -11,9 +11,10 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.movieappmad24.models.getMovies
 import simple.SimpleBottomAppBar
 import simple.SimpleTopAppBar
+import view.MoviesViewModel
 
 @Composable
-fun WatchlistScreen(navController: NavController) {
+fun WatchlistScreen(navController: NavController, viewModel: MoviesViewModel) {
 
     var selectedItemId by rememberSaveable {
         mutableStateOf("WatchList")
