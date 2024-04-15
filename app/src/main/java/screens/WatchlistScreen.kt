@@ -38,6 +38,6 @@ fun WatchlistScreen(navController: NavController, viewModel: MoviesViewModel) {
         },
         content = { padding ->
             // just get a slightly different list of movies
-            MovieList(movies = getMovies().drop(2).dropLast(3), padding, navController) },
+            MovieList(movies = getMovies().drop(2).dropLast(3), padding, navController, viewModel) },
     )
 }

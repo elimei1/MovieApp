@@ -108,7 +108,7 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}, onFavClick: () ->
                         .padding(8.dp)
                         .clickable {
                             favorite = !favorite
-                            onFavClick(//is favorite, addorremove)
+                            onFavClick() //is favorite, addorremove
                         },
                     // red if clicked
                     tint =
