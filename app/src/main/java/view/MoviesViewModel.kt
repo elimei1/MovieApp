@@ -19,11 +19,11 @@ class MoviesViewModel: ViewModel() {
         movie.isFavoriteMovie = !movie.isFavoriteMovie
     }
 
-    fun addOrRemoveFromFavorite(movie: Movie) {
+    fun addOrRemove(movie: Movie) {
         if (!movie.isFavoriteMovie) {
-            _favoriteMovieList.add(movie)
-        } else {
             _favoriteMovieList.remove(movie)
+        } else {
+            _favoriteMovieList.add(movie)
         }
     }
 }

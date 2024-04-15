@@ -13,6 +13,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -69,7 +70,7 @@ fun HomeScreen(navController: NavController, viewModel: MoviesViewModel) {
             )
         },
         content = { padding ->
-            MovieList(movies = viewModel.movieList, padding, navController, viewModel)
+            MovieList(viewModel.movieList, padding, navController, viewModel)
         },
     )
 }
@@ -87,10 +88,6 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}, onFavClick: () ->
         shape = RoundedCornerShape(size = 20.dp),
     ) {
         Column {
-            // state of heart
-            var favorite by remember {
-                mutableStateOf(false)
-            }
             Box {
                 AsyncImage(
                     // first image because of list of images
@@ -101,19 +98,15 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}, onFavClick: () ->
                         .aspectRatio(18.5f / 9f)
                 )
                 Icon(
-                    imageVector = Icons.Default.FavoriteBorder,
+                    imageVector =
+                    if (movie.isFavoriteMovie) Icons.Default.Favorite
+                    else Icons.Default.FavoriteBorder,
                     contentDescription = "heart",
                     modifier = Modifier
                         .align(alignment = Alignment.TopEnd)
                         .padding(8.dp)
-                        .clickable {
-                            favorite = !favorite
-                            onFavClick() //is favorite, addorremove
-                        },
-                    // red if clicked
-                    tint =
-                    if (favorite) Color.Red
-                    else MaterialTheme.colorScheme.secondary
+                        .clickable { onFavClick() },
+                    tint = Color.Red
                 )
             }
             // state to check if card expanded
@@ -179,6 +172,7 @@ fun MovieList(
                 movie = movie,
                 onFavClick = {
                     viewModel.toggleIsFavorite(movie)
+                    viewModel.addOrRemove(movie)
                 },
                 onItemClick = { movieId ->
                     navController.navigate(Screen.Detail.passMovieId(movieId))

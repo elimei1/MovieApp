@@ -41,7 +41,7 @@ import view.MoviesViewModel
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun DetailScreen(movieId: String?, navController: NavController, viewModel: MoviesViewModel) {
+fun DetailScreen(movieId: String?, navController: NavController, viewModel: MoviesViewModel ) {
 
     val movie = getMovies().find { it.id == movieId }
 
@@ -56,17 +56,23 @@ fun DetailScreen(movieId: String?, navController: NavController, viewModel: Movi
         },
         content = {padding ->
             movie?.let {
-                MovieDetailsContent(movie = it, padding = padding)
+                MovieDetailsContent(movie = it, padding = padding, viewModel = viewModel)
             }
         }
     )
 }
 
 @Composable
-fun MovieDetailsContent(movie: Movie, padding: PaddingValues) {
+fun MovieDetailsContent(movie: Movie, padding: PaddingValues, viewModel: MoviesViewModel) {
     LazyColumn(modifier = Modifier.padding(padding)) {
         item() {
-            MovieRow(movie = movie)
+            MovieRow(
+                movie = movie,
+                onFavClick = {
+                    viewModel.toggleIsFavorite(movie)
+                    viewModel.addOrRemove(movie)
+                }
+            )
 
             Text(
                 text = "${movie.title} Trailer",
