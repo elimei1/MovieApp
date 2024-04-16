@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -102,12 +103,13 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}, onFavClick: () ->
                     if (movie.isFavoriteMovie) Icons.Default.Favorite
                     else Icons.Default.FavoriteBorder,
                     contentDescription = "heart",
+                    tint = Color.Red,
                     modifier = Modifier
                         .align(alignment = Alignment.TopEnd)
                         .padding(8.dp)
-                        .clickable { onFavClick() },
-                    tint = Color.Red
+                        .clickable { onFavClick() }
                 )
+
             }
             // state to check if card expanded
             var open by remember {

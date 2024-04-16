@@ -20,10 +20,10 @@ class MoviesViewModel: ViewModel() {
     }
 
     fun addOrRemove(movie: Movie) {
-        if (!movie.isFavoriteMovie) {
-            _favoriteMovieList.remove(movie)
-        } else {
+        if (movie.isFavoriteMovie) {
             _favoriteMovieList.add(movie)
+        } else {
+            _favoriteMovieList.remove(movie)
         }
     }
 }

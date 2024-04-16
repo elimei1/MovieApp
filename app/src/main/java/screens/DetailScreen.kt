@@ -43,7 +43,7 @@ import view.MoviesViewModel
 @Composable
 fun DetailScreen(movieId: String?, navController: NavController, viewModel: MoviesViewModel ) {
 
-    val movie = getMovies().find { it.id == movieId }
+    val movie = viewModel.movieList.find { it.id == movieId }
 
     Scaffold(
         topBar = {
@@ -55,8 +55,8 @@ fun DetailScreen(movieId: String?, navController: NavController, viewModel: Movi
             }
         },
         content = {padding ->
-            movie?.let {
-                MovieDetailsContent(movie = it, padding = padding, viewModel = viewModel)
+            if (movie != null) {
+                MovieDetailsContent(movie = movie, padding = padding, viewModel = viewModel)
             }
         }
     )
@@ -92,7 +92,7 @@ fun MovieDetailsContent(movie: Movie, padding: PaddingValues, viewModel: MoviesV
                     Card(
                         modifier = Modifier
                             .padding(horizontal = 8.dp, vertical = 30.dp)
-                            .size(height = 250.dp, width = 400.dp)  // just fits this way
+                            .size(height = 225.dp, width = 350.dp)  // just fits this way
                     ) {
                         AsyncImage(
                             model = imageUrl,
