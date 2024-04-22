@@ -99,15 +99,15 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}, onFavClick: () ->
                         .aspectRatio(18.5f / 9f)
                 )
                 Icon(
-                    imageVector =
-                    if (movie.isFavoriteMovie) Icons.Default.Favorite
-                    else Icons.Default.FavoriteBorder,
                     contentDescription = "heart",
                     tint = Color.Red,
                     modifier = Modifier
                         .align(alignment = Alignment.TopEnd)
                         .padding(8.dp)
-                        .clickable { onFavClick() }
+                        .clickable { onFavClick() },
+                    imageVector =
+                    if (movie.isFavoriteMovie) Icons.Default.Favorite
+                    else Icons.Default.FavoriteBorder
                 )
 
             }
