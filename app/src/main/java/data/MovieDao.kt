@@ -12,20 +12,20 @@ import kotlinx.coroutines.flow.Flow
 interface MovieDao {
 
     @Insert
-    fun insert(movie: Movie)
+    suspend fun insert(movie: Movie)
 
     @Update
-    fun update(movie: Movie)
+    suspend fun update(movie: Movie)
 
     @Delete
-    fun delete(movie: Movie)
+    suspend fun delete(movie: Movie)
 
     @Query("SELECT * FROM movie")
     fun getAll(): Flow<List<Movie>>
 
-    @Query("SELECT * FROM movie WHERE dbId = :dbId")
-    fun getMovieById(dbId: Long): Flow<Movie?>
+    @Query("SELECT * FROM movie WHERE dbId = :id")
+    fun getMovieById(id: Long): Flow<Movie?>
 
     @Query("SELECT * FROM movie WHERE isFavoriteMovie = 1")
-    fun getAllMarkedAsFavorite(isFavoriteMovie: Boolean): Flow<List<Movie>>
+    fun getAllMarkedAsFavorite(): Flow<List<Movie>>
 }

@@ -34,20 +34,31 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
 import com.example.movieappmad24.models.Movie
 import com.example.movieappmad24.models.getMovies
+import data.MovieDatabase
+import data.MovieRepository
 import navigation.Screen
 import simple.SimpleBottomAppBar
 import simple.SimpleTopAppBar
 import view.MoviesViewModel
+import view.MoviesViewModelFactory
 
 @Composable
 fun HomeScreen(navController: NavController, viewModel: MoviesViewModel) {
+
+    val db = MovieDatabase.getDatabase(LocalContext.current)
+    val repository = MovieRepository(movieDao = db.movieDao())
+    val factory = MoviesViewModelFactory(repository = repository)
+    val viewModel: MoviesViewModel = viewModel(factory = factory)
+
     // state for currently selected item
     var selectedItemId by rememberSaveable {
         mutableStateOf("Home")
