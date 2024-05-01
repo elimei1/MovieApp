@@ -28,67 +28,69 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
-import com.example.movieappmad24.models.Movie
-import com.example.movieappmad24.models.getMovies
+import di.InjectorUtils
+import models.MovieWithImages
 import simple.SimpleTopAppBar
-import view.MoviesViewModel
+import view.DetailViewModel
 
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun DetailScreen(movieId: String?, navController: NavController, viewModel: MoviesViewModel ) {
+fun DetailScreen(movieId: String, navController: NavController) {
 
-    val movie = viewModel.movieList.find { it.id == movieId }
+    val detailViewModel: DetailViewModel = viewModel(factory = InjectorUtils.provideMovieViewModelFactory(context = LocalContext.current))
+    val instance = detailViewModel.getMovieById(movieId)
 
     Scaffold(
         topBar = {
-            if (movie != null) {
+            if (instance != null) {
                 SimpleTopAppBar (
-                    title = movie.title,
+                    title = instance.movie.title,
                     navController = navController
                 )
             }
         },
         content = {padding ->
-            if (movie != null) {
-                MovieDetailsContent(movie = movie, padding = padding, viewModel = viewModel)
+            if (instance != null) {
+                MovieDetailsContent(instance = instance , padding = padding, detailViewModel = detailViewModel)
             }
         }
     )
 }
 
 @Composable
-fun MovieDetailsContent(movie: Movie, padding: PaddingValues, viewModel: MoviesViewModel) {
+fun MovieDetailsContent(instance: MovieWithImages, padding: PaddingValues, detailViewModel: DetailViewModel) {
     LazyColumn(modifier = Modifier.padding(padding)) {
         item() {
             MovieRow(
-                movie = movie,
+                instance = instance,
                 onFavClick = {
-                    viewModel.toggleIsFavorite(movie)
-                    viewModel.addOrRemove(movie)
+                    detailViewModel.toggleIsFavorite(instance)
+                    detailViewModel.addOrRemove(instance)
                 }
             )
 
             Text(
-                text = "${movie.title} Trailer",
+                text = "${instance.movie.title} Trailer",
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.CenterHorizontally)
                     .padding(vertical = 8.dp))
 
             
-            Player(movieTrailer = movie.trailer)
+            Player(movieTrailer = instance.movie.trailer)
 
             // scrollable row
             LazyRow(
                 modifier = Modifier
             ) {
-                items(items = movie.images.drop(1)) { imageUrl ->
+                items(items = instance.movieImages.drop(1)) { imageUrl ->
                     Card(
                         modifier = Modifier
                             .padding(horizontal = 8.dp, vertical = 30.dp)

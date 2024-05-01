@@ -7,6 +7,7 @@ import androidx.room.Query
 import androidx.room.Update
 import com.example.movieappmad24.models.Movie
 import kotlinx.coroutines.flow.Flow
+import models.MovieWithImages
 
 @Dao
 interface MovieDao {
@@ -21,11 +22,11 @@ interface MovieDao {
     suspend fun delete(movie: Movie)
 
     @Query("SELECT * FROM movie")
-    fun getAll(): Flow<List<Movie>>
+    fun getAll(): Flow<List<MovieWithImages>>
 
     @Query("SELECT * FROM movie WHERE dbId = :id")
-    fun getMovieById(id: Long): Flow<Movie?>
+    fun getMovieById(id: String): MovieWithImages?
 
     @Query("SELECT * FROM movie WHERE isFavoriteMovie = 1")
-    fun getAllMarkedAsFavorite(): Flow<List<Movie>>
+    fun getAllMarkedAsFavorite(): Flow<List<MovieWithImages>>
 }

@@ -20,11 +20,10 @@ import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.Card
 import androidx.compose.material3.Divider
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,24 +40,23 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import coil.compose.AsyncImage
-import com.example.movieappmad24.models.Movie
-import com.example.movieappmad24.models.getMovies
 import data.MovieDatabase
 import data.MovieRepository
+import di.InjectorUtils
+import models.MovieWithImages
 import navigation.Screen
 import simple.SimpleBottomAppBar
 import simple.SimpleTopAppBar
-import view.MoviesViewModel
+import view.HomeViewModel
 import view.MoviesViewModelFactory
 
 @Composable
-fun HomeScreen(navController: NavController, viewModel: MoviesViewModel) {
+fun HomeScreen(navController: NavController) {
 
     val db = MovieDatabase.getDatabase(LocalContext.current)
     val repository = MovieRepository(movieDao = db.movieDao())
     val factory = MoviesViewModelFactory(repository = repository)
-    val viewModel: MoviesViewModel = viewModel(factory = factory)
-
+    val homeViewModel: HomeViewModel = viewModel(factory = InjectorUtils.provideMovieViewModelFactory(context = LocalContext.current))
     // state for currently selected item
     var selectedItemId by rememberSaveable {
         mutableStateOf("Home")
@@ -82,20 +80,20 @@ fun HomeScreen(navController: NavController, viewModel: MoviesViewModel) {
             )
         },
         content = { padding ->
-            MovieList(viewModel.movieList, padding, navController, viewModel)
+            MovieList(homeViewModel.movieList.collectAsState().value, padding, navController, homeViewModel)
         },
     )
 }
 
 @Composable
-fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}, onFavClick: () -> Unit = {}) {
+fun MovieRow(instance: MovieWithImages, onItemClick: (String) -> Unit = {}, onFavClick: () -> Unit = {}) {
     // whole thing
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(5.dp)
             .clickable {
-                onItemClick(movie.id)
+                onItemClick(instance.movie.id)
             },
         shape = RoundedCornerShape(size = 20.dp),
     ) {
@@ -103,7 +101,7 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}, onFavClick: () ->
             Box {
                 AsyncImage(
                     // first image because of list of images
-                    model = movie.images[0],
+                    model = instance.movieImages[0],
                     contentDescription = "images",
                     contentScale = ContentScale.FillWidth,
                     modifier = Modifier
@@ -117,7 +115,7 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}, onFavClick: () ->
                         .padding(8.dp)
                         .clickable { onFavClick() },
                     imageVector =
-                    if (movie.isFavoriteMovie) Icons.Default.Favorite
+                    if (instance.movie.isFavoriteMovie) Icons.Default.Favorite
                     else Icons.Default.FavoriteBorder
                 )
 
@@ -130,7 +128,7 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}, onFavClick: () ->
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = movie.title,
+                    text = instance.movie.title,
                     modifier = Modifier
                         .padding(8.dp)
                         .weight(weight = 7f),
@@ -153,16 +151,16 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}, onFavClick: () ->
                 Column(modifier = Modifier.padding(all = 12.dp)) {
                     // multiline string
                     val movieDetails = """
-                            |Director: ${movie.director}
-                            |Released: ${movie.year}
-                            |Genre: ${movie.genre}
-                            |Actors: ${movie.actors}
-                            |Rating: ${movie.rating}
+                            |Director: ${instance.movie.director}
+                            |Released: ${instance.movie.year}
+                            |Genre: ${instance.movie.genre}
+                            |Actors: ${instance.movie.actors}
+                            |Rating: ${instance.movie.rating}
                         """.trimMargin()    // remove whitespaces on left side
 
                     Text(text = movieDetails)
                     Divider(color = Color.Black, thickness = 2.dp)
-                    Text(text = "Plot: ${movie.plot}")
+                    Text(text = "Plot: ${instance.movie.plot}")
                 }
             }
         }
@@ -171,21 +169,21 @@ fun MovieRow(movie: Movie, onItemClick: (String) -> Unit = {}, onFavClick: () ->
 
 @Composable
 fun MovieList(
-    movies: List<Movie>,
+    movies: List<MovieWithImages>,
     padding: PaddingValues,
     navController: NavController,
-    viewModel: MoviesViewModel
+    viewModel: HomeViewModel
 ) {
     LazyColumn(
         modifier = Modifier
             .padding(paddingValues = padding)
     ) {
-        items(items = movies) { movie ->
+        items(items = movies) { instance ->
             MovieRow(
-                movie = movie,
+                instance = instance,
                 onFavClick = {
-                    viewModel.toggleIsFavorite(movie)
-                    viewModel.addOrRemove(movie)
+                    viewModel.toggleIsFavorite(instance)
+                    viewModel.addOrRemove(instance)
                 },
                 onItemClick = { movieId ->
                     navController.navigate(Screen.Detail.passMovieId(movieId))
