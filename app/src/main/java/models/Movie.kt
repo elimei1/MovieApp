@@ -1,4 +1,4 @@
-package com.example.movieappmad24.models
+package models
 
 
 import androidx.room.Entity
@@ -22,7 +22,35 @@ data class Movie(
     val trailer: String,
     val rating: String,
     var isFavoriteMovie: Boolean = false
-)
+) /*{
+    constructor(
+        dbId: Long,
+        id: String,
+        title: String,
+        year: String,
+        genre: String,
+        director: String,
+        actors: String,
+        plot: String,
+        trailer: String,
+        rating: String,
+        isFavouriteMovie: Boolean,
+    ) : this(
+        dbId = dbId,
+        id = id,
+        title = title,
+        year = year,
+        genre = genre,
+        director = director,
+        actors = actors,
+        plot = plot,
+        images = emptyList<String>(),
+        trailer = trailer,
+        rating = rating,
+        isFavouriteMovie = isFavouriteMovie
+    )
+}
+*/
 
 fun getMovies(): List<Movie> {
     return listOf(

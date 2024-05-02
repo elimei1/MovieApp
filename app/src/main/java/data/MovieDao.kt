@@ -4,8 +4,9 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Transaction
 import androidx.room.Update
-import com.example.movieappmad24.models.Movie
+import models.Movie
 import kotlinx.coroutines.flow.Flow
 import models.MovieWithImages
 
@@ -24,8 +25,8 @@ interface MovieDao {
     @Query("SELECT * FROM movie")
     fun getAll(): Flow<List<MovieWithImages>>
 
-    @Query("SELECT * FROM movie WHERE dbId = :id")
-    fun getMovieById(id: String): MovieWithImages?
+    @Query("SELECT * FROM movie WHERE dbId = :dbId")
+    fun getMovieById(dbId: String): MovieWithImages?
 
     @Query("SELECT * FROM movie WHERE isFavoriteMovie = 1")
     fun getAllMarkedAsFavorite(): Flow<List<MovieWithImages>>

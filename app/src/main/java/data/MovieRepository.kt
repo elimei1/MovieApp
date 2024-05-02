@@ -1,6 +1,6 @@
 package data
 
-import com.example.movieappmad24.models.Movie
+import models.Movie
 import kotlinx.coroutines.flow.Flow
 import models.MovieWithImages
 
